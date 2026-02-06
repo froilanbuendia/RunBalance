@@ -14,10 +14,10 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // Routes
-app.use("/hc", healthCheckRoutes);
-app.use("/auth", authRoutes);
-app.use("/athlete", athleteRoutes);
-app.use("/activities", activitiesRoutes);
+app.use("api/hc", healthCheckRoutes);
+app.use("api/auth", authRoutes);
+app.use("api/athlete", athleteRoutes);
+app.use("api/activities", activitiesRoutes);
 
 app.get("/api/health/db", async (req, res) => {
   try {

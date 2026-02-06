@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "migrate": "node-pg-migrate"
+    "migrate": "node src/database/migrate.js",
+    "reset": "node src/database/reset.js"
   },
   "author": "",
   "license": "ISC",
