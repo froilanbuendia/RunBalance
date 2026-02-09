@@ -8,9 +8,8 @@ const { upsertActivity } = require("../repositories/activities");
 exports.getActivities = async (req, res) => {
   try {
     // Use the numeric DB ID from the authenticated user
-    const athleteId = req.user.id;
-
-    if (typeof athleteId !== "number") {
+    const athleteId = Number(req.user.id);
+    if (Number.isNaN(athleteId)) {
       throw new Error("Invalid athlete ID");
     }
 

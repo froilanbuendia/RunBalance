@@ -1,9 +1,9 @@
-const axios = require("axios");
 const {
   upsertAthlete,
   saveAthleteTokens,
   getAthleteTokens,
 } = require("../repositories/athletes");
+
 const jwt = require("jsonwebtoken");
 const stravaConfig = require("../config/strava");
 
@@ -18,6 +18,7 @@ exports.redirectToStrava = (req, res) => {
     scope: "activity:read_all,profile:read_all",
     approval_prompt: "auto",
   });
+
   console.log(
     "url check:",
     stravaConfig.authUrl,
@@ -37,12 +38,19 @@ exports.handleCallback = async (req, res) => {
     if (!code) throw new Error("Authorization code missing");
 
     // Exchange code for tokens
-    const { data } = await axios.post(stravaConfig.tokenUrl, {
-      client_id: stravaConfig.clientId,
-      client_secret: stravaConfig.clientSecret,
-      code,
-      grant_type: "authorization_code",
+    const tokenRes = await fetch(stravaConfig.tokenUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: stravaConfig.clientId,
+        client_secret: stravaConfig.clientSecret,
+        code,
+        grant_type: "authorization_code",
+      }),
     });
+
+    const data = await tokenRes.json();
+    if (!tokenRes.ok) throw new Error(JSON.stringify(data));
 
     const athlete = data.athlete;
 
@@ -64,7 +72,7 @@ exports.handleCallback = async (req, res) => {
     // Redirect back to frontend
     res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error(err.message);
     res.status(500).send("Authentication failed");
   }
 };
@@ -76,21 +84,29 @@ async function refreshAccessToken(athleteId) {
   const tokens = await getAthleteTokens(athleteId);
   if (!tokens?.refresh_token) throw new Error("Missing refresh token");
 
-  const response = await axios.post(stravaConfig.tokenUrl, {
-    client_id: stravaConfig.clientId,
-    client_secret: stravaConfig.clientSecret,
-    grant_type: "refresh_token",
-    refresh_token: tokens.refresh_token,
+  const res = await fetch(stravaConfig.tokenUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: stravaConfig.clientId,
+      client_secret: stravaConfig.clientSecret,
+      grant_type: "refresh_token",
+      refresh_token: tokens.refresh_token,
+    }),
   });
 
+  const data = await res.json();
+  if (!res.ok) throw new Error(JSON.stringify(data));
+
   const newTokens = {
-    access_token: response.data.access_token,
-    refresh_token: response.data.refresh_token,
-    expires_at: response.data.expires_at,
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_at: data.expires_at,
   };
 
   await saveAthleteTokens(athleteId, newTokens);
   console.log(`Strava token refreshed for athlete ${athleteId}`);
+
   return newTokens.access_token;
 }
 
