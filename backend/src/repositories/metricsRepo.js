@@ -160,3 +160,42 @@ exports.getAcuteChronicLoad = async (athleteId) => {
 
   return rows[0];
 };
+
+/**
+ * Get pace trend for the last 4 weeks
+ * Returns array of { week, avg_speed, avg_pace }
+ */
+exports.getPaceTrend = async (athleteId) => {
+  const { rows } = await pool.query(
+    `
+      WITH last_4_weeks AS (
+        SELECT generate_series(
+                 date_trunc('week', NOW()) - interval '3 weeks',
+                 date_trunc('week', NOW()),
+                 interval '1 week'
+               ) AS week
+      ),
+      weekly AS (
+        SELECT
+          lw.week,
+          COALESCE(AVG(a.average_speed), 0) AS avg_speed,
+          COALESCE(AVG(a.moving_time / (a.distance/1609.34)), 0) AS avg_seconds_per_mile
+        FROM last_4_weeks lw
+        LEFT JOIN activities a
+          ON date_trunc('week', a.start_date) = lw.week
+         AND a.athlete_id = $1
+         AND a.type = 'Run'
+        GROUP BY lw.week
+      )
+      SELECT
+        week,
+        avg_speed,
+        TO_CHAR(MAKE_INTERVAL(secs => avg_seconds_per_mile), 'MI:SS') AS avg_pace
+      FROM weekly
+      ORDER BY week;
+      `,
+    [athleteId]
+  );
+
+  return rows;
+};

@@ -35,3 +35,31 @@ exports.injury = async (req, res) => {
     res.status(500).send("Failed to calculate injury risk");
   }
 };
+
+exports.overview = async (req, res) => {
+  try {
+    const athleteId = req.user.id;
+
+    const metrics = await getPerformanceMetrics(athleteId);
+    const load = await getAcuteChronicLoad(athleteId);
+
+    let injuryRisk = {
+      acwr: 0,
+      risk: "NO_DATA",
+      acuteMiles: 0,
+      chronicMiles: 0,
+    };
+
+    if (load) {
+      injuryRisk = computeInjuryRisk(load.acute_load, load.chronic_load);
+    }
+
+    res.json({
+      ...metrics,
+      injuryRisk,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to fetch overview metrics");
+  }
+};
