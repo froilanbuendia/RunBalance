@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import Navbar from "./components/Navbar/Navbar";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
             path="/dashboard"
             element={
               <ProtectedRoute>
+                <Navbar />
                 <Dashboard />
               </ProtectedRoute>
             }

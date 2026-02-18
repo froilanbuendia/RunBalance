@@ -85,4 +85,22 @@ const getAthleteTokens = async (athleteId) => {
   return rows[0];
 };
 
-module.exports = { upsertAthlete, saveAthleteTokens, getAthleteTokens };
+const getAthleteProfile = async (athleteId) => {
+  const { rows } = await pool.query(
+    `
+    SELECT id, username, firstname, profile, city, state, country
+    FROM athletes
+    WHERE id = $1;
+    `,
+    [athleteId],
+  );
+
+  return rows[0]; // usually return a single athlete
+};
+
+module.exports = {
+  upsertAthlete,
+  saveAthleteTokens,
+  getAthleteTokens,
+  getAthleteProfile,
+};

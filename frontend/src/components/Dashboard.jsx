@@ -10,12 +10,15 @@ export default function Dashboard() {
 
   const getOverview = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/metrics/overview", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/metrics/overview`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to retrieve dashboard.");
