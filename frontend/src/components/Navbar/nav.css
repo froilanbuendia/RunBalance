@@ -3,19 +3,45 @@
   align-items: center;
   justify-content: space-between;
   height: 4rem;
-  padding-inline: 1rem;
   font-size: 1.5rem;
   color: #0b132b;
-  box-shadow: 0 0 0.25rem #0b132b;
+  box-shadow: 0 0 0.125rem #0b132b;
 }
 
-.nav-profile {
+.nav-profile-brand-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+.nav-profile-container {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  transition: border 1s ease;
+}
+
 .profile-img {
   border-radius: 50%;
   height: 2.5rem;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 4rem;
+  display: flex;
+  flex-direction: column;
+  border: 0.0125rem solid #0b132b;
+  border-top: none;
+}
+
+.profile-btn {
+  border: none;
+  background-color: #f5f5f5;
+  padding: 1rem;
+}
+
+.profile-btn:hover {
+  background-color: #e4e4e4;
+  cursor: pointer;
 }
