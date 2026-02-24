@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
 import { IoMenu } from "react-icons/io5";
-import { IoMdArrowDropdown } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "./nav.css";
 
 const Navbar = () => {
   const [athlete, setAthlete] = useState(null);
-  const [menuModal, setMenuModal] = useState(false);
-  const [profileModal, setProfileModal] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  // const [profilePinned, setProfilePinned] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPinned, setMenuPinned] = useState(false);
+  const location = useLocation();
+
+  const [active, setActive] = useState(location.pathname);
+
   const token = localStorage.getItem("jwt");
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
-    window.location.reload(); // or use navigate("/")
+    navigate("/");
   };
 
   const handleSyncActivities = async () => {
@@ -68,43 +77,89 @@ const Navbar = () => {
     if (token) getAthlete();
   }, [token]);
 
-  const isMobile = window.matchMedia("(hover: none)").matches;
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(hover: none)").matches);
+  }, []);
+
+  useEffect(() => {
+    const close = () => {
+      setProfileOpen(false);
+      setMenuOpen(false);
+      setMenuPinned(false);
+    };
+
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
+  }, []);
 
   return (
     <nav className="nav-container">
       <div className="nav-profile-brand-container">
         <div
           className="nav-profile-container"
-          onMouseEnter={() => !isMobile && setProfileModal(true)}
-          onMouseLeave={() => !isMobile && setProfileModal(false)}
-          onClick={() => isMobile && setProfileModal(!profileModal)}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          onMouseEnter={() => !isMobile && setProfileOpen(true)}
+          onMouseLeave={() => !isMobile && setProfileOpen(false)}
         >
           <img
-            src={`${athlete?.profile}`}
+            src={athlete?.profile}
             alt="Athlete Profile Picture"
             className="profile-img"
           />
-          {profileModal && (
-            <div className="profile-dropdown">
-              <button
-                onClick={() => handleSyncActivities()}
-                className="profile-btn"
-              >
+
+          {profileOpen && (
+            <div
+              className="profile-dropdown"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button onClick={handleSyncActivities} className="profile-btn">
                 Sync Activities
               </button>
-              <button onClick={() => handleLogout()} className="profile-btn">
+              <button onClick={handleLogout} className="profile-btn">
                 Logout
               </button>
             </div>
           )}
         </div>
+
         <h1>LetMeRun</h1>
       </div>
-      {menuModal ? (
-        <RxCross2 onClick={() => setMenuModal(!menuModal)} />
-      ) : (
-        <IoMenu onClick={() => setMenuModal(!menuModal)} />
-      )}
+      <div
+        className="menu-container"
+        onMouseEnter={() => !isMobile && setMenuOpen(true)}
+        onMouseLeave={() => !isMobile && !menuPinned && setMenuOpen(false)}
+        onClick={(e) => {
+          e.stopPropagation();
+          isMobile ? setMenuOpen(!menuOpen) : setMenuPinned(!menuPinned);
+        }}
+      >
+        {menuOpen && menuPinned ? <RxCross2 /> : <IoMenu />}
+
+        {(menuOpen || menuPinned) && (
+          <div className="tab-dropdown" onClick={(e) => e.stopPropagation()}>
+            <Link
+              to="/dashboard"
+              className={
+                active === "/dashboard" ? "tab-link active-link" : "tab-link"
+              }
+              onClick={() => setActive("/dashboard")}
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/history"
+              className={
+                active === "/history" ? "tab-link active-link" : "tab-link"
+              }
+              onClick={() => setActive("/history")}
+            >
+              History
+            </Link>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };
