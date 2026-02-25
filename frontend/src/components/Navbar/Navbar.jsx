@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
+import useAuth from "../../hooks/useAuth";
 import "./nav.css";
 
 const Navbar = () => {
@@ -14,16 +13,11 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPinned, setMenuPinned] = useState(false);
   const location = useLocation();
+  const { logout } = useAuth();
 
   const [active, setActive] = useState(location.pathname);
 
   const token = localStorage.getItem("jwt");
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("jwt");
-    navigate("/");
-  };
 
   const handleSyncActivities = async () => {
     try {
@@ -114,10 +108,13 @@ const Navbar = () => {
               className="profile-dropdown"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={handleSyncActivities} className="profile-btn">
+              <button
+                onClick={() => handleSyncActivities()}
+                className="profile-btn"
+              >
                 Sync Activities
               </button>
-              <button onClick={handleLogout} className="profile-btn">
+              <button onClick={() => logout()} className="profile-btn">
                 Logout
               </button>
             </div>
