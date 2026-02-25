@@ -1,4 +1,5 @@
 const { createStravaApi } = require("../utils/stravaApi");
+const { getAthleteProfile } = require("../services/athleteServices");
 
 exports.getAthlete = async (req, res) => {
   try {
@@ -39,5 +40,18 @@ exports.getStats = async (req, res) => {
   } catch (err) {
     console.error(err.message || err);
     res.status(500).send("Failed to fetch stats.");
+  }
+};
+
+exports.getAthleteProfile = async (req, res) => {
+  try {
+    console.log("here", req);
+    const athleteId = req.user.id;
+
+    const metrics = await getAthleteProfile(athleteId);
+    res.json(metrics);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Metrics failed");
   }
 };
