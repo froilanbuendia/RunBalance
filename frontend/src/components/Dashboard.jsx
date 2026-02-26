@@ -1,41 +1,25 @@
 import { useEffect, useState } from "react";
-import MileageCard from "./cards/MileageCard";
-import InjuryRiskCard from "./cards/InjuryRiskCard";
-import MileageChart from "./charts/MileageChart";
-import PaceTrendChart from "./charts/PaceTrendChart";
+import MileageCard from "./Cards/MileageCard";
+import InjuryRiskCard from "./Cards/InjuryRiskCard";
+import MileageChart from "./Charts/MileageChart";
+import PaceTrendChart from "./Charts/PaceTrendChart";
+import Chart from "./Cards/Chart";
+import { fetchDashboardData } from "../api/athlete";
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
-  const token = localStorage.getItem("jwt");
-
-  const getOverview = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/metrics/overview`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to retrieve dashboard.");
-      }
-      const overviewData = await res.json();
-      setData(overviewData);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      throw new Error("Fetch error:", err);
-    }
-  };
 
   useEffect(() => {
-    if (token) {
-      getOverview();
-    }
-  }, [token]);
+    const fetchOverview = async () => {
+      try {
+        const dashboardData = await fetchDashboardData();
+        setData(dashboardData);
+      } catch (err) {
+        throw new Error(`Getting Dashboard Error: ${err}`);
+      }
+    };
+    fetchOverview();
+  }, []);
 
   if (!data) return <p>Loading...</p>;
 
@@ -45,8 +29,8 @@ export default function Dashboard() {
     <div style={{ padding: 16 }}>
       <MileageCard miles={data.weeklyDistance.miles} />
       <InjuryRiskCard risk={data.injuryRisk} />
-      <MileageChart weeklyMileage={data.rollingMileageAvg} />
-      <PaceTrendChart paceData={data.paceTrend} />
+      <Chart chart={<MileageChart weeklyMileage={data.rollingMileageAvg} />} />
+      <Chart chart={<PaceTrendChart paceData={data.paceTrend} />} />
     </div>
   );
 }

@@ -1,9 +1,47 @@
 .card {
   background: var(--gradient);
-  color: var(--text);
-  padding: 1em;
-  margin-block: 1em;
-  border-radius: 12px;
+  margin-block: 1rem;
+  border-radius: 0.75rem;
   border: var(--border-card);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-s);
+  color: var(--text-muted);
+  min-height: 1rem;
+}
+
+h2,
+h3,
+p {
+  margin: 0;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--text);
+}
+
+hr {
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+b {
+  color: var(--text);
+}
+
+.data-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acute-chronic-container {
+  display: flex;
+}
+
+.acute-chronic-container > p {
+  font-size: 0.75rem;
+  padding: 0 0 0.5rem 1rem;
 }

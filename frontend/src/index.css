@@ -5,6 +5,13 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
+  --shadow-s:
+    0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
+  --shadow-m:
+    0px 2px 4px hsla(0, 0%, 0%, 0.07), 0px 4px 8px hsla(0, 0%, 0%, 0.15);
+  --shadow-l:
+    0px 4px 6px hsla(0, 0%, 0%, 0.07), 0px 6px 10px hsla(0, 0%, 0%, 0.15);
 }
 
 @media (prefers-color-scheme: light) {
@@ -23,10 +30,7 @@
     --warning: oklch(0.5 0.05 100);
     --success: oklch(0.5 0.05 160);
     --info: oklch(0.5 0.05 260);
-    --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
     --border-card: solid 1px var(var(--bg));
-    --shadow:
-      0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
   }
 }
 
@@ -46,9 +50,7 @@
     --warning: oklch(0.7 0.05 100);
     --success: oklch(0.7 0.05 160);
     --info: oklch(0.7 0.05 260);
-    --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
     --border-card: solid 1px var(var(--border));
-    --shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.07), 0px 4px 4px hsla;
   }
 }
 

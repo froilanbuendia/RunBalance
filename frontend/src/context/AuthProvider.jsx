@@ -1,36 +1,10 @@
 import { useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
+import { fetchAthleteProfile } from "../api/athlete";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("jwt"));
-
-  // Load user when token changes
-  useEffect(() => {
-    if (!token) {
-      setUser(null);
-      return;
-    }
-
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/athlete/profile`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-
-        if (!res.ok) throw new Error("Not authenticated");
-        const data = await res.json();
-        setUser(data);
-      } catch {
-        logout();
-      }
-    };
-
-    fetchUser();
-  }, [token]);
 
   const login = (jwt) => {
     localStorage.setItem("jwt", jwt);
@@ -44,6 +18,22 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   };
+
+  // Load user when token changes
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchUser = async () => {
+      try {
+        const data = await fetchAthleteProfile();
+        setUser(data);
+      } catch {
+        logout();
+      }
+    };
+
+    fetchUser();
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>

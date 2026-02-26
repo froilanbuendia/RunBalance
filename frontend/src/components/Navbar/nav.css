@@ -5,7 +5,7 @@
   height: 4rem;
   font-size: 1.5rem;
   color: var(--primary);
-  box-shadow: 0 0 0.125rem var(--border);
+  box-shadow: 0 0 0.25rem var(--border);
 }
 
 .nav-profile-brand-container {
@@ -25,7 +25,6 @@
   border-radius: 50%;
   padding-inline: 0.5rem;
   height: 2.5rem;
-  cursor: pointer;
 }
 
 .menu-container {
@@ -33,8 +32,8 @@
   align-items: center;
   height: 100%;
   padding-inline: 0.5rem;
-  cursor: pointer;
   color: var(--text);
+  cursor: pointer;
 }
 
 .profile-dropdown,
@@ -63,7 +62,6 @@
 .tab-link:hover {
   background-color: var(--bg);
   color: var(--text-muted);
-
   cursor: pointer;
 }
 
