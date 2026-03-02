@@ -1,9 +1,0 @@
-.card {
-  background: var(--gradient);
-  color: var(--text);
-  padding: 1em;
-  margin-block: 1em;
-  border-radius: 12px;
-  border: var(--border-card);
-  box-shadow: var(--shadow);
-}

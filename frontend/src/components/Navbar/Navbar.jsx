@@ -2,78 +2,19 @@ import { useEffect, useState } from "react";
 import { IoMenu } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
+import { syncActivities } from "../../api/athlete";
 import useAuth from "../../hooks/useAuth";
 import "./nav.css";
 
 const Navbar = () => {
-  const [athlete, setAthlete] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
-  // const [profilePinned, setProfilePinned] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPinned, setMenuPinned] = useState(false);
+  const isMobile = window.matchMedia("(hover: none)").matches;
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const [active, setActive] = useState(location.pathname);
-
-  const token = localStorage.getItem("jwt");
-
-  const handleSyncActivities = async () => {
-    try {
-      const res = await fetch("http://localhost:4000/api/activities/sync", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // send JWT
-        },
-        body: JSON.stringify({}), // empty body if backend fetches Strava activities itself
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("Backend error:", data);
-        alert("Failed to sync activities.");
-        return;
-      }
-
-      console.log("Activities synced:", data);
-      alert(`Successfully synced ${data.count} activities!`);
-    } catch (err) {
-      console.error("Fetch error:", err);
-      alert("Failed to sync activities.");
-    }
-  };
-
-  const getAthlete = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/athlete/profile`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!res.ok) throw new Error("Failed to retrieve dashboard.");
-
-      const athleteData = await res.json();
-      setAthlete(athleteData);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  };
-
-  useEffect(() => {
-    if (token) getAthlete();
-  }, [token]);
-
-  useEffect(() => {
-    setIsMobile(window.matchMedia("(hover: none)").matches);
-  }, []);
 
   useEffect(() => {
     const close = () => {
@@ -98,7 +39,7 @@ const Navbar = () => {
           onMouseLeave={() => !isMobile && setProfileOpen(false)}
         >
           <img
-            src={athlete?.profile}
+            src={user?.profile}
             alt="Athlete Profile Picture"
             className="profile-img"
           />
@@ -108,10 +49,7 @@ const Navbar = () => {
               className="profile-dropdown"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={() => handleSyncActivities()}
-                className="profile-btn"
-              >
+              <button onClick={() => syncActivities()} className="profile-btn">
                 Sync Activities
               </button>
               <button onClick={() => logout()} className="profile-btn">
