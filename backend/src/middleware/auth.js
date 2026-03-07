@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 
     const { rows } = await pool.query(
       "SELECT id, access_token FROM athletes WHERE id = $1",
-      [athleteId]
+      [athleteId],
     );
 
     if (!rows.length) {
@@ -25,7 +25,6 @@ module.exports = async (req, res, next) => {
     req.user = rows[0];
     next();
   } catch (err) {
-    console.error("Auth middleware error:", err);
     res.status(401).json({ error: "Invalid token" });
   }
 };

@@ -6,7 +6,6 @@ const InjuryRiskCard = ({ risk }) => {
     HIGH: "var(--danger)",
     NO_DATA: "gray",
   };
-  console.log(risk);
 
   return (
     <div className="card">

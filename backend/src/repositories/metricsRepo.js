@@ -4,22 +4,33 @@ const { pool } = require("../database/db");
  * Get weekly mileage for the most recent week
  * Returns { week, miles }
  */
-exports.getWeeklyMileage = async (athleteId) => {
+exports.getRolling7DayLoad = async (athleteId) => {
   const { rows } = await pool.query(
     `
-    WITH last_week AS (
-      SELECT date_trunc('week', NOW()) AS week
-    )
-    SELECT lw.week,
-           COALESCE(SUM(a.distance)/1609.34, 0) AS miles
-    FROM last_week lw
-    LEFT JOIN activities a
-      ON date_trunc('week', a.start_date) = lw.week
-     AND a.athlete_id = $1
-     AND a.type = 'Run'
-    GROUP BY lw.week;
+    SELECT
+      COALESCE(SUM(a.distance)/1609.34, 0) AS rolling_7d_miles
+    FROM activities a
+    WHERE a.athlete_id = $1
+      AND a.type = 'Run'
+      AND a.start_date >= NOW() - interval '7 days';
     `,
-    [athleteId]
+    [athleteId],
+  );
+
+  return rows[0];
+};
+
+exports.getRolling28DayLoad = async (athleteId) => {
+  const { rows } = await pool.query(
+    `
+    SELECT
+      COALESCE(SUM(a.distance)/1609.34, 0) AS rolling_28d_miles
+    FROM activities a
+    WHERE a.athlete_id = $1
+      AND a.type = 'Run'
+      AND a.start_date >= NOW() - interval '28 days';
+    `,
+    [athleteId],
   );
 
   return rows[0];
@@ -56,7 +67,7 @@ exports.getRollingFourWeekAverage = async (athleteId) => {
     FROM weekly
     ORDER BY week;
     `,
-    [athleteId]
+    [athleteId],
   );
 
   return rows;
@@ -78,44 +89,7 @@ exports.getAveragePaceByMiles = async (athleteId) => {
       GROUP BY miles
       ORDER BY miles;
       `,
-    [athleteId]
-  );
-
-  return rows;
-};
-
-/**
- * Get pace trend for the last 4 weeks
- * Returns array of { week, avg_speed, avg_pace }
- */
-exports.getPaceTrend = async (athleteId) => {
-  const { rows } = await pool.query(
-    `
-      WITH last_4_weeks AS (
-        SELECT generate_series(
-                 date_trunc('week', NOW()) - interval '3 weeks',
-                 date_trunc('week', NOW()),
-                 interval '1 week'
-               ) AS week
-      ),
-      weekly AS (
-        SELECT
-          lw.week,
-          COALESCE(AVG(a.moving_time / (a.distance/1609.34)), 0) AS avg_seconds_per_mile
-        FROM last_4_weeks lw
-        LEFT JOIN activities a
-          ON date_trunc('week', a.start_date) = lw.week
-         AND a.athlete_id = $1
-         AND a.type = 'Run'
-        GROUP BY lw.week
-      )
-      SELECT
-        week,
-        TO_CHAR(MAKE_INTERVAL(secs => avg_seconds_per_mile), 'MI:SS') AS avg_pace
-      FROM weekly
-      ORDER BY week;
-      `,
-    [athleteId]
+    [athleteId],
   );
 
   return rows;
@@ -126,36 +100,38 @@ exports.getPaceTrend = async (athleteId) => {
  * Handles weeks with no runs
  * Returns { acute_load, chronic_load, acwr }
  */
-exports.getAcuteChronicLoad = async (athleteId) => {
+exports.getRollingAcwr = async (athleteId) => {
   const { rows } = await pool.query(
     `
-    WITH last_4_weeks AS (
-      SELECT generate_series(
-               date_trunc('week', NOW()) - interval '3 weeks',
-               date_trunc('week', NOW()),
-               interval '1 week'
-             ) AS week
-    ),
-    weekly AS (
+    WITH base AS (
       SELECT
-        lw.week,
-        COALESCE(SUM(a.distance)/1609.34, 0) AS miles
-      FROM last_4_weeks lw
-      LEFT JOIN activities a
-        ON date_trunc('week', a.start_date) = lw.week
-       AND a.athlete_id = $1
-       AND a.type = 'Run'
-      GROUP BY lw.week
+        COALESCE(SUM(
+          CASE
+            WHEN a.start_date >= NOW() - interval '7 days'
+            THEN a.distance
+            ELSE 0
+          END
+        ) / 1609.34, 0) AS acute_miles,
+
+        COALESCE(SUM(
+          CASE
+            WHEN a.start_date >= NOW() - interval '28 days'
+            THEN a.distance
+            ELSE 0
+          END
+        ) / 1609.34, 0) AS total_28_day_miles
+
+      FROM activities a
+      WHERE a.athlete_id = $1
+        AND a.type = 'Run'
+        AND a.start_date >= NOW() - interval '28 days'
     )
     SELECT
-      (SELECT miles FROM weekly ORDER BY week DESC LIMIT 1) AS acute_load,
-      (SELECT AVG(miles) FROM weekly) AS chronic_load,
-      (SELECT miles FROM weekly ORDER BY week DESC LIMIT 1) /
-        NULLIF((SELECT AVG(miles) FROM weekly), 0) AS acwr
-    FROM weekly
-    LIMIT 1;
+      acute_miles AS acute_load,
+      (total_28_day_miles / 4.0) AS chronic_load
+    FROM base;
     `,
-    [athleteId]
+    [athleteId],
   );
 
   return rows[0];
@@ -165,36 +141,21 @@ exports.getAcuteChronicLoad = async (athleteId) => {
  * Get pace trend for the last 4 weeks
  * Returns array of { week, avg_speed, avg_pace }
  */
-exports.getPaceTrend = async (athleteId) => {
+exports.getRollingPaceTrend = async (athleteId) => {
   const { rows } = await pool.query(
     `
-      WITH last_4_weeks AS (
-        SELECT generate_series(
-                 date_trunc('week', NOW()) - interval '3 weeks',
-                 date_trunc('week', NOW()),
-                 interval '1 week'
-               ) AS week
-      ),
-      weekly AS (
-        SELECT
-          lw.week,
-          COALESCE(AVG(a.average_speed), 0) AS avg_speed,
-          COALESCE(AVG(a.moving_time / (a.distance/1609.34)), 0) AS avg_seconds_per_mile
-        FROM last_4_weeks lw
-        LEFT JOIN activities a
-          ON date_trunc('week', a.start_date) = lw.week
-         AND a.athlete_id = $1
-         AND a.type = 'Run'
-        GROUP BY lw.week
-      )
-      SELECT
-        week,
-        avg_speed,
-        TO_CHAR(MAKE_INTERVAL(secs => avg_seconds_per_mile), 'MI:SS') AS avg_pace
-      FROM weekly
-      ORDER BY week;
-      `,
-    [athleteId]
+    SELECT
+      DATE(start_date) AS day,
+      SUM(moving_time) /
+      NULLIF(SUM(distance/1609.34), 0) AS seconds_per_mile
+    FROM activities
+    WHERE athlete_id = $1
+      AND type = 'Run'
+      AND start_date >= NOW() - interval '84 days'
+    GROUP BY day
+    ORDER BY day;
+    `,
+    [athleteId],
   );
 
   return rows;

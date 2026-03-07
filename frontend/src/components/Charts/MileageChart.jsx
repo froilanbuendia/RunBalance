@@ -1,37 +1,26 @@
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 const MileageChart = ({ weeklyMileage }) => {
   if (!weeklyMileage || weeklyMileage.length === 0) return null;
-  console.log(weeklyMileage);
+
   const labels = weeklyMileage.map((w) =>
     new Date(w.week).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-    })
+    }),
   );
 
+  const miles = weeklyMileage.map((w) => Number(w.miles.toFixed(1)));
+
   const data = {
-    labels: labels,
-    plugins: {
-      title: {
-        display: true,
-        text: "Weekly Pace Trend",
-      },
-    },
+    labels,
     datasets: [
       {
         label: "Weekly Mileage",
-        data: weeklyMileage.map((w) => w.miles),
+        data: miles,
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
     ],
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "Miles in a Week",
-        },
-      },
-    },
   };
 
   const options = {
@@ -45,6 +34,8 @@ const MileageChart = ({ weeklyMileage }) => {
     },
     scales: {
       y: {
+        min: 0,
+        suggestedMax: Math.max(...miles) * 1.2,
         title: {
           display: true,
           text: "Miles",
@@ -53,7 +44,7 @@ const MileageChart = ({ weeklyMileage }) => {
     },
   };
 
-  return <Line data={data} options={options} />;
+  return <Bar data={data} options={options} />;
 };
 
 export default MileageChart;

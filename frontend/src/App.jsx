@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import Navbar from "./components/Navbar/Navbar";
 import History from "./components/History";
+import { SyncProvider } from "./context/SyncProvider";
 
 const App = () => {
   return (
@@ -18,8 +19,10 @@ const App = () => {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Navbar />
-                <Dashboard />
+                <SyncProvider>
+                  <Navbar />
+                  <Dashboard />
+                </SyncProvider>
               </ProtectedRoute>
             }
           />

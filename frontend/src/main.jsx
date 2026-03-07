@@ -7,21 +7,23 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
+  BarElement,
   LineElement,
-  Title,
+  PointElement,
   Tooltip,
   Legend,
+  Title,
 } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
+  BarElement,
   LineElement,
-  Title,
+  PointElement,
   Tooltip,
   Legend,
+  Title,
 );
 
 createRoot(document.getElementById("root")).render(
