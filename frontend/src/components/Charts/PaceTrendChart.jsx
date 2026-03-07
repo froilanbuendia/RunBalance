@@ -3,30 +3,35 @@ import { Line } from "react-chartjs-2";
 const PaceTrendChart = ({ paceData }) => {
   if (!paceData || paceData.length === 0) return null;
 
-  const paceToSeconds = (pace) => {
-    if (!pace || pace === "00:00") return null;
-    const [min, sec] = pace.split(":").map(Number);
-    return min * 60 + sec;
+  const secondsToPace = (seconds) => {
+    if (!seconds || seconds <= 0) return "--:--";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.round(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const labels = paceData.map((w) =>
-    new Date(w.week).toLocaleDateString("en-US", {
+    new Date(w.day).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-    })
+    }),
   );
 
-  const paceSeconds = paceData.map((w) => paceToSeconds(w.avg_pace));
+  const paceSeconds = paceData.map((w) => w.seconds_per_mile ?? null);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Avg Pace (min/mile)",
+        label: "Avg Pace",
         data: paceSeconds,
-        // borderWidth: 2,
-        // tension: 0.3,
         spanGaps: true,
+        borderColor: "blue",
+        backgroundColor: "rgba(0,0,255,0.1)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 4,
       },
     ],
   };
@@ -35,23 +40,34 @@ const PaceTrendChart = ({ paceData }) => {
     responsive: true,
     plugins: {
       legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const seconds = context.raw;
+            return `Pace: ${secondsToPace(seconds)}`;
+          },
+        },
+      },
       title: {
         display: true,
-        text: "Weekly Pace Trend",
+        text: "Pace Trend (Rolling 84 Days)",
       },
     },
     scales: {
       y: {
+        reverse: true,
         ticks: {
-          callback: (value) => {
-            const min = Math.floor(value / 60);
-            const sec = Math.round(value % 60);
-            return `${min}:${sec.toString().padStart(2, "0")}`;
-          },
+          callback: (value) => secondsToPace(value),
         },
         title: {
           display: true,
           text: "Pace (min/mile)",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Date",
         },
       },
     },

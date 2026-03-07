@@ -4,6 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 import { syncActivities } from "../../api/athlete";
 import useAuth from "../../hooks/useAuth";
+import { useSync } from "../../context/SyncContext";
 import "./nav.css";
 
 const Navbar = () => {
@@ -11,8 +12,10 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPinned, setMenuPinned] = useState(false);
   const isMobile = window.matchMedia("(hover: none)").matches;
+  const [syncing, setSyncing] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { triggerSync } = useSync();
 
   const [active, setActive] = useState(location.pathname);
 
@@ -49,8 +52,16 @@ const Navbar = () => {
               className="profile-dropdown"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={() => syncActivities()} className="profile-btn">
-                Sync Activities
+              <button
+                onClick={async () => {
+                  setSyncing(true);
+                  await syncActivities();
+                  triggerSync();
+                  setSyncing(false);
+                }}
+                className="profile-btn"
+              >
+                {syncing ? "Syncing..." : "Sync Activities"}
               </button>
               <button onClick={() => logout()} className="profile-btn">
                 Logout

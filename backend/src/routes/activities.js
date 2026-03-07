@@ -8,9 +8,8 @@ router.post(
   "/sync",
   authMiddleware,
   (req, res, next) => {
-    console.log("POST /api/activities/sync hit!");
     next();
   },
-  activitiesController.syncActivities
+  activitiesController.syncActivities,
 );
 module.exports = router;
