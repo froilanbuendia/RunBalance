@@ -1,11 +1,10 @@
 .card {
-  background: var(--gradient);
-  margin-block: 1rem;
+  background: var(--bg-light);
   border-radius: 0.75rem;
   border: var(--border-card);
   box-shadow: var(--shadow-s);
   color: var(--text-muted);
-  min-height: 1rem;
+  min-height: 10.765rem;
 }
 
 h2,
@@ -44,4 +43,37 @@ b {
 .acute-chronic-container > p {
   font-size: 0.75rem;
   padding: 0 0 0.5rem 1rem;
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+}
+
+.range-btn-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.range-btn {
+  font-size: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 0.1rem solid var(--border);
+  background-color: var(--bg-light);
+  color: var(--text-muted);
+}
+
+.active-btn,
+.range-btn:hover {
+  background-color: var(--bg-dark);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-s);
+}
+
+.chart {
+  padding-inline: 1rem;
+  width: 100%;
+  height: 100%;
 }

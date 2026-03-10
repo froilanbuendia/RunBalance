@@ -10,12 +10,15 @@ import {
   BarElement,
   LineElement,
   PointElement,
+  LineController,
   Tooltip,
   Legend,
   Title,
+  Filler,
 } from "chart.js";
 
 ChartJS.register(
+  LineController,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -24,6 +27,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Title,
+  Filler,
 );
 
 createRoot(document.getElementById("root")).render(

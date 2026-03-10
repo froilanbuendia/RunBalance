@@ -17,8 +17,7 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { triggerSync } = useSync();
 
-  const [active, setActive] = useState(location.pathname);
-
+  const isActive = (path) => location.pathname === path;
   useEffect(() => {
     const close = () => {
       setProfileOpen(false);
@@ -88,18 +87,16 @@ const Navbar = () => {
             <Link
               to="/dashboard"
               className={
-                active === "/dashboard" ? "tab-link active-link" : "tab-link"
+                isActive("/dashboard") ? "tab-link active-link" : "tab-link"
               }
-              onClick={() => setActive("/dashboard")}
             >
               Dashboard
             </Link>
             <Link
               to="/history"
               className={
-                active === "/history" ? "tab-link active-link" : "tab-link"
+                isActive("/history") ? "tab-link active-link" : "tab-link"
               }
-              onClick={() => setActive("/history")}
             >
               History
             </Link>

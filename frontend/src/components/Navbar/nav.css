@@ -5,7 +5,13 @@
   height: 4rem;
   font-size: 1.5rem;
   color: var(--primary);
-  box-shadow: 0 0 0.25rem var(--border);
+  border: 0.0125rem solid var(--border-muted);
+  position: fixed;
+  max-width: 1440px;
+  width: 100%;
+  background-color: var(--bg-light);
+  z-index: 1;
+  border-top: none;
 }
 
 .nav-profile-brand-container {
@@ -39,11 +45,12 @@
 .profile-dropdown,
 .tab-dropdown {
   position: absolute;
-  top: 4rem;
+  top: 3.984rem;
   display: flex;
   flex-direction: column;
   border: 0.0125rem solid var(--border-muted);
   border-top: none;
+  z-index: 10;
 }
 .tab-dropdown {
   right: 0;
@@ -52,16 +59,16 @@
 .profile-btn,
 .tab-link {
   border: none;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-light);
   padding: 1rem;
-  color: var(--text);
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
 .profile-btn:hover,
 .tab-link:hover {
-  background-color: var(--bg);
-  color: var(--text-muted);
+  background-color: var(--bg-dark);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -71,5 +78,5 @@
 
 .active-link {
   background-color: var(--bg);
-  color: var(--text-muted);
+  color: var(--text);
 }

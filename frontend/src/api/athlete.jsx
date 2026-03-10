@@ -11,16 +11,16 @@ export const fetchAcwr = () => {
   return apiFetch(`/api/metrics/injury`);
 };
 
-export const fetchMileage = () => {
-  return apiFetch(`/api/metrics/mileage`);
+export const fetchMileage = (range) => {
+  return apiFetch(`/api/metrics/mileage?range=${range}`);
 };
 
 export const fetchLoad = () => {
   return apiFetch(`/api/metrics/load`);
 };
 
-export const fetchPaceTrend = () => {
-  return apiFetch(`/api/metrics/pace-trend`);
+export const fetchPaceTrend = (range) => {
+  return apiFetch(`/api/metrics/pace-trend?range=${range}`);
 };
 
 export const fetchPaceAvg = () => {

@@ -45,9 +45,7 @@ exports.getStats = async (req, res) => {
 
 exports.getAthleteProfile = async (req, res) => {
   try {
-    console.log("here", req);
     const athleteId = req.user.id;
-
     const metrics = await getAthleteProfile(athleteId);
     res.json(metrics);
   } catch (err) {

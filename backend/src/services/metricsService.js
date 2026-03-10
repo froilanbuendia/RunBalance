@@ -3,6 +3,8 @@ const {
   getRollingFourWeekAverage,
   getAveragePaceByMiles,
   getRollingPaceTrend,
+  getRollingMileage,
+  getPaceTrend,
 } = require("../repositories/metricsRepo");
 
 exports.getPerformanceMetrics = async (athleteId) => {
@@ -23,12 +25,12 @@ exports.getTrainingLoad = async (athleteId) => {
   return await getRolling7DayLoad(athleteId);
 };
 
-exports.getMileage = async (athleteId) => {
-  return await getRollingFourWeekAverage(athleteId);
+exports.getMileage = async (athleteId, weeks) => {
+  return await getRollingMileage(athleteId, weeks);
 };
 
-exports.getPaceTrend = async (athleteId) => {
-  return await getRollingPaceTrend(athleteId);
+exports.getPaceTrend = async (athleteId, weeks) => {
+  return await getPaceTrend(athleteId, weeks);
 };
 
 exports.getAveragePace = async (athleteId) => {
