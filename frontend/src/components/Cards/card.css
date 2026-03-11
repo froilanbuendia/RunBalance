@@ -36,13 +36,20 @@ b {
   justify-content: center;
 }
 
-.acute-chronic-container {
+.acute-chronic-container,
+.mileage-info {
   display: flex;
 }
 
-.acute-chronic-container > p {
+.acute-chronic-container > p,
+.mileage-info > p {
   font-size: 0.75rem;
   padding: 0 0 0.5rem 1rem;
+}
+
+.acute-chronic-container > p:last-child,
+.mileage-info > p:last-child {
+  padding-right: 0.5rem;
 }
 
 .chart-title {
@@ -76,4 +83,47 @@ b {
   padding-inline: 1rem;
   width: 100%;
   height: 100%;
+}
+
+.arrow-icon-up {
+  color: var(--success);
+}
+
+.arrow-icon-down {
+  color: var(--danger);
+}
+
+.compare-rolling {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.goal-container {
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+}
+
+.progress-container {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  background-color: var(--bg-dark);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--success);
+}
+
+.progress-container span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-muted);
+  font-weight: bold;
 }
