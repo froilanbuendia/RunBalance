@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchMileage,
-  fetchLoad,
-  fetchPaceAvg,
-  fetchPaceTrend,
-  fetchAcwr,
-} from "../api/athlete";
+import { fetchLoad, fetchPaceAvg, fetchAcwr } from "../api/athlete";
 import { useSync } from "../context/SyncContext";
 
 const useDashboardData = () => {
@@ -18,20 +12,16 @@ const useDashboardData = () => {
     const load = async () => {
       setLoading(true);
 
-      const [mileage, acwr, load, paceAvg, paceTrend] = await Promise.all([
-        fetchMileage(),
+      const [acwr, load, paceAvg] = await Promise.all([
         fetchAcwr(),
         fetchLoad(),
         fetchPaceAvg(),
-        fetchPaceTrend(),
       ]);
 
       setData({
-        mileage,
         acwr,
         ...load,
         paceAvg,
-        paceTrend,
       });
 
       setLoading(false);

@@ -30,8 +30,17 @@ exports.load = async (req, res) => {
 
 exports.mileage = async (req, res) => {
   try {
+    const range = req.query.range || "1m";
+    const ranges = {
+      "1m": 5,
+      "3m": 13,
+      "6m": 26,
+      "1y": 52,
+    };
+
+    const weeks = ranges[range] || 5;
     const athleteId = req.user.id;
-    const weeklyLoad = await getMileage(athleteId);
+    const weeklyLoad = await getMileage(athleteId, weeks);
     res.json(weeklyLoad);
   } catch (err) {
     res.status(500).send("Fetching Weekly Load Failed");
@@ -40,8 +49,19 @@ exports.mileage = async (req, res) => {
 
 exports.paceTrend = async (req, res) => {
   try {
+    const range = req.query.range || "1m";
+
+    const ranges = {
+      "1m": 5,
+      "3m": 13,
+      "6m": 26,
+      "1y": 52,
+    };
+
+    const weeks = ranges[range] || 5;
+
     const athleteId = req.user.id;
-    const paceTrend = await getPaceTrend(athleteId);
+    const paceTrend = await getPaceTrend(athleteId, weeks);
     res.json(paceTrend);
   } catch (err) {
     res.status(500).send("Fetching Pace Trend Failed");
@@ -71,7 +91,6 @@ exports.injury = async (req, res) => {
         chronicMiles: 0,
       });
     }
-    console.log(data);
 
     const result = computeInjuryRisk(data.acute_load, data.chronic_load);
 

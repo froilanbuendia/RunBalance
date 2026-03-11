@@ -40,32 +40,27 @@ exports.getRolling28DayLoad = async (athleteId) => {
  * Get rolling 4-week average, last 4 weeks including current week
  * Returns array of weeks with miles + rolling 4wk average
  */
-exports.getRollingFourWeekAverage = async (athleteId) => {
+exports.getRollingMileage = async (athleteId, weeks) => {
   const { rows } = await pool.query(
     `
-    WITH last_4_weeks AS (
+    WITH series AS (
       SELECT generate_series(
-               date_trunc('week', NOW()) - interval '3 weeks',
-               date_trunc('week', NOW()),
-               interval '1 week'
-             ) AS week
-    ),
-    weekly AS (
-      SELECT
-        lw.week,
-        COALESCE(SUM(a.distance)/1609.34, 0) AS miles
-      FROM last_4_weeks lw
-      LEFT JOIN activities a
-        ON date_trunc('week', a.start_date) = lw.week
-       AND a.athlete_id = $1
-       AND a.type = 'Run'
-      GROUP BY lw.week
+        date_trunc('week', NOW()) - interval '${weeks - 1} week',
+        date_trunc('week', NOW()),
+        interval '1 week'
+      ) AS week
     )
-    SELECT week,
-           miles,
-           AVG(miles) OVER () AS rolling_4wk_avg
-    FROM weekly
-    ORDER BY week;
+    SELECT
+      s.week,
+      COALESCE(SUM(a.distance) / 1609.34, 0) AS miles
+    FROM series s
+    LEFT JOIN activities a
+      ON a.start_date >= s.week
+      AND a.start_date < s.week + interval '1 week'
+      AND a.athlete_id = $1
+      AND a.type = 'Run'
+    GROUP BY s.week
+    ORDER BY s.week;
     `,
     [athleteId],
   );
@@ -141,19 +136,30 @@ exports.getRollingAcwr = async (athleteId) => {
  * Get pace trend for the last 4 weeks
  * Returns array of { week, avg_speed, avg_pace }
  */
-exports.getRollingPaceTrend = async (athleteId) => {
+exports.getPaceTrend = async (athleteId, weeks) => {
   const { rows } = await pool.query(
     `
+    WITH series AS (
+      SELECT generate_series(
+        date_trunc('week', NOW()) - interval '${weeks - 1} week',
+        date_trunc('week', NOW()),
+        interval '1 week'
+      ) AS week
+    )
     SELECT
-      DATE(start_date) AS day,
-      SUM(moving_time) /
-      NULLIF(SUM(distance/1609.34), 0) AS seconds_per_mile
-    FROM activities
-    WHERE athlete_id = $1
-      AND type = 'Run'
-      AND start_date >= NOW() - interval '84 days'
-    GROUP BY day
-    ORDER BY day;
+      s.week,
+      COALESCE(
+        AVG(a.moving_time * 1609.34 / NULLIF(a.distance, 0)),
+        NULL
+      ) AS pace
+    FROM series s
+    LEFT JOIN activities a
+      ON a.start_date >= s.week
+      AND a.start_date < s.week + interval '1 week'
+      AND a.athlete_id = $1
+      AND a.type = 'Run'
+    GROUP BY s.week
+    ORDER BY s.week;
     `,
     [athleteId],
   );
