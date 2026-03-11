@@ -1,10 +1,13 @@
 const {
   getRolling7DayLoad,
+  getLastWeekLoad,
+  getRolling7DayStats,
   getRollingFourWeekAverage,
   getAveragePaceByMiles,
   getRollingPaceTrend,
   getRollingMileage,
   getPaceTrend,
+  getCurrentWeeklyGoal,
 } = require("../repositories/metricsRepo");
 
 exports.getPerformanceMetrics = async (athleteId) => {
@@ -18,11 +21,26 @@ exports.getPerformanceMetrics = async (athleteId) => {
     avgPace: avgPace,
     paceTrend: trend,
     rollingMileageAvg: rolling_4wk_avg,
+    weeklyGoal: weeklyGoal,
   };
 };
 
 exports.getTrainingLoad = async (athleteId) => {
-  return await getRolling7DayLoad(athleteId);
+  const [week, lastWeek, stats, weeklyGoal] = await Promise.all([
+    getRolling7DayLoad(athleteId),
+    getLastWeekLoad(athleteId),
+    getRolling7DayStats(athleteId),
+    getCurrentWeeklyGoal(athleteId),
+  ]);
+
+  const diff = week.rolling_7d_miles - lastWeek.last_week_miles;
+  return {
+    miles: week.rolling_7d_miles,
+    diff,
+    runs: stats.runs,
+    duration: stats.total_seconds,
+    weeklyGoal: weeklyGoal,
+  };
 };
 
 exports.getMileage = async (athleteId, weeks) => {

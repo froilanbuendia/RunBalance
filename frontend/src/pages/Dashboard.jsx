@@ -24,12 +24,18 @@ const Dashboard = () => {
     setPaceRange(range);
   };
   if (loading) return <p>Loading...</p>;
-  console.log(pace, mileage);
 
   return (
     <div className="page-container">
       <div className="card-container">
-        <MileageCard miles={data.rolling_7d_miles} />
+        <MileageCard
+          miles={data.miles}
+          diff={data.diff}
+          duration={data.duration}
+          runs={data.runs}
+          target={data.weeklyGoal.target_distance}
+          completed={data.weeklyGoal.completed_distance}
+        />
         <InjuryRiskCard risk={data.acwr} />
       </div>
       <div className="card-container">
