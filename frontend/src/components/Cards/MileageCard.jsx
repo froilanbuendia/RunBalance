@@ -17,12 +17,12 @@ const MileageCard = ({ miles, diff, duration, runs, completed, target }) => {
       <h2 className="data-text">{miles.toFixed(2)} miles</h2>
       <hr></hr>
       <div className="goal-container">
-        <p>Goal:</p>
+        <p>
+          Goal:<b>{target}mi</b>
+        </p>
         <div className="progress-container">
           <div className="progress-bar" style={{ width: `${progress}%` }}></div>
-          <span>
-            {completed.toFixed(1)} / {target} miles
-          </span>
+          <span>{progress.toFixed(2)}%</span>
         </div>
       </div>
       <div className="mileage-info">

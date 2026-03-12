@@ -1,19 +1,20 @@
 const { pool } = require("../database/db");
 
 // weeklyGoals.js
-exports.getCurrentWeeklyGoal = async (athleteId) => {
+exports.getRollingWeeklyGoal = async (athleteId) => {
   const res = await pool.query(
-    `SELECT g.target_distance, COALESCE(SUM(a.distance / 1609.34), 0) AS completed_distance
+    `SELECT 
+        g.target_distance,
+        COALESCE(SUM(a.distance / 1609.34), 0) AS completed_distance
      FROM weekly_goals g
      LEFT JOIN activities a
-       ON a.athlete_id = g.athlete_id
-       AND a.start_date >= g.week_start
-       AND a.start_date < g.week_start + INTERVAL '7 days'
+        ON a.athlete_id = g.athlete_id
+        AND a.start_date >= NOW() - INTERVAL '7 days'
      WHERE g.athlete_id = $1
-       AND g.week_start = date_trunc('week', current_date)  -- start of current week
-     GROUP BY g.athlete_id, g.week_start, g.target_distance`,
+     GROUP BY g.target_distance`,
     [athleteId],
   );
+
   return res.rows[0];
 };
 /**

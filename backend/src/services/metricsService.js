@@ -7,7 +7,7 @@ const {
   getRollingPaceTrend,
   getRollingMileage,
   getPaceTrend,
-  getCurrentWeeklyGoal,
+  getRollingWeeklyGoal,
 } = require("../repositories/metricsRepo");
 
 exports.getPerformanceMetrics = async (athleteId) => {
@@ -30,7 +30,7 @@ exports.getTrainingLoad = async (athleteId) => {
     getRolling7DayLoad(athleteId),
     getLastWeekLoad(athleteId),
     getRolling7DayStats(athleteId),
-    getCurrentWeeklyGoal(athleteId),
+    getRollingWeeklyGoal(athleteId),
   ]);
 
   const diff = week.rolling_7d_miles - lastWeek.last_week_miles;

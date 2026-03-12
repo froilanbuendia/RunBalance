@@ -7,6 +7,6 @@
 }
 
 .card-container > * {
-  flex: 1 350px;
+  flex: 1 360px;
   min-width: 0;
 }
