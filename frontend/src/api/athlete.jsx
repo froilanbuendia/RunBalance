@@ -23,6 +23,10 @@ export const fetchPaceTrend = (range) => {
   return apiFetch(`/api/metrics/pace-trend?range=${range}`);
 };
 
+export const fetchHeatmapData = (metric) => {
+  return apiFetch(`/api/metrics/heatmap?metric=${metric}`);
+};
+
 export const fetchPaceAvg = () => {
   return apiFetch(`/api/metrics/pace-avg`);
 };

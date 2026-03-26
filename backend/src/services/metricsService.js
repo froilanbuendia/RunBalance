@@ -8,6 +8,7 @@ const {
   getRollingMileage,
   getPaceTrend,
   getRollingWeeklyGoal,
+  getHeatmapData,
 } = require("../repositories/metricsRepo");
 
 exports.getPerformanceMetrics = async (athleteId) => {
@@ -53,4 +54,8 @@ exports.getPaceTrend = async (athleteId, weeks) => {
 
 exports.getAveragePace = async (athleteId) => {
   return await getAveragePaceByMiles(athleteId);
+};
+
+exports.getHeatmapData = async (athleteId, metric) => {
+  return await getHeatmapData(athleteId, metric);
 };

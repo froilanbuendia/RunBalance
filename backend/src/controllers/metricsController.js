@@ -6,6 +6,7 @@ const {
   getPaceTrend,
   getAveragePace,
   getMileage,
+  getHeatmapData,
 } = require("../services/metricsService");
 
 exports.performance = async (req, res) => {
@@ -97,6 +98,17 @@ exports.injury = async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).send("Failed to calculate injury risk");
+  }
+};
+
+exports.heatmap = async (req, res) => {
+  try {
+    const metric = req.query.metric || "distance";
+    const athleteId = req.user.id;
+    const data = await getHeatmapData(athleteId, metric);
+    res.json(data, "data");
+  } catch (err) {
+    res.status(500).send("Fetching HeatMap Failed");
   }
 };
 

@@ -13,6 +13,11 @@
     0px 2px 4px hsla(0, 0%, 0%, 0.07), 0px 4px 8px hsla(0, 0%, 0%, 0.15);
   --shadow-l:
     0px 4px 6px hsla(0, 0%, 0%, 0.07), 0px 6px 10px hsla(0, 0%, 0%, 0.15);
+  --color-empty: var(--bg);
+  --color-1: #c7dd9c;
+  --color-2: #70ab67;
+  --color-3: oklch(57.586% 0.0588 158.287);
+  --color-4: oklch(0.5 0.05 160);
 }
 
 @media (prefers-color-scheme: light) {
@@ -63,10 +68,43 @@
     --shadow-l:
       0px 4px 6px hsla(0, 0%, 0%, 0.5), 0px 6px 10px hsla(0, 0%, 0%, 0.6),
       0px 0px 0px 1px hsla(0, 0%, 100%, 0.05);
+    --color-1: oklch(86.547% 0.23097 150.793);
+    --color-2: oklch(75.86% 0.18462 153.297);
+    --color-3: oklch(76.286% 0.19034 152.473);
+    --color-4: oklch(42.138% 0.09438 154.364);
   }
 }
 
 body {
   background-color: var(--bg);
   margin: 0;
+}
+
+/* typography */
+h2,
+h3,
+p {
+  margin: 0;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  line-height: 2;
+}
+
+p {
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--text);
+}
+
+hr {
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+b {
+  color: var(--text);
 }
