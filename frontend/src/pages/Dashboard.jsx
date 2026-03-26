@@ -4,8 +4,10 @@ import MileageChart from "../components/Charts/MileageChart";
 import PaceTrendChart from "../components/Charts/PaceTrendChart";
 import Chart from "../components/Cards/Chart";
 import useDashboardData from "../hooks/useDashboardData";
-import { fetchMileage, fetchPaceTrend } from "../api/athlete";
+import { fetchHeatmapData, fetchMileage, fetchPaceTrend } from "../api/athlete";
 import { useState } from "react";
+import TrainingHeatmap from "../components/Charts/TrainingHeatMap";
+import { Tooltip } from "react-tooltip";
 import useChartData from "../hooks/useChartData";
 import "./pages.css";
 import "./dashboard.css";
@@ -14,8 +16,10 @@ const Dashboard = () => {
   const { data, loading } = useDashboardData();
   const [mileageRange, setMileageRange] = useState("1m");
   const [paceRange, setPaceRange] = useState("1m");
+  const [heatmap, setHeatMap] = useState("distance");
   const mileage = useChartData(mileageRange, fetchMileage);
   const pace = useChartData(paceRange, fetchPaceTrend);
+  const heatmapData = useChartData(heatmap, fetchHeatmapData);
   const handleMileageRange = (range) => {
     setMileageRange(range);
   };
@@ -23,6 +27,11 @@ const Dashboard = () => {
   const handlePaceRange = (range) => {
     setPaceRange(range);
   };
+
+  const handleHeatMap = (map) => {
+    setHeatMap(map);
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -51,6 +60,15 @@ const Dashboard = () => {
           range={paceRange}
           chart={<PaceTrendChart paceData={pace} />}
         />
+      </div>
+      <div className="card-container">
+        <Chart
+          name="Heatmap"
+          heatmap={heatmap}
+          handleHeatMap={handleHeatMap}
+          chart={<TrainingHeatmap heatmap={heatmap} runs={heatmapData} />}
+        />
+        <Tooltip id="heatmap-tooltip" />
       </div>
     </div>
   );

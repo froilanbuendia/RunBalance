@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 const useChartData = (range, fetchFn) => {
-  const [data, setData] = useState(null);
-  console.log("chart hook");
-
+  const [data, setData] = useState([]);
   useEffect(() => {
     let isMounted = true;
 

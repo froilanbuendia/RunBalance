@@ -217,3 +217,44 @@ exports.getPaceTrend = async (athleteId, weeks) => {
 
   return rows;
 };
+
+exports.getHeatmapData = async (athleteId, metric) => {
+  let valueColumn;
+  switch (metric) {
+    case "distance":
+      valueColumn = "SUM(a.distance) / 1609.34";
+      break;
+
+    case "pace":
+      valueColumn = "AVG(a.moving_time * 1609.34 / NULLIF(a.distance,0))";
+      break;
+
+    case "elevation":
+      valueColumn = "SUM(a.total_elevation_gain)";
+      break;
+
+    case "effort":
+      valueColumn = "AVG(a.average_heartrate)";
+      break;
+
+    default:
+      valueColumn = "SUM(a.distance) / 1609.34";
+  }
+
+  const { rows } = await pool.query(
+    `
+    SELECT
+      DATE(a.start_date) AS date,
+      ${valueColumn} AS count
+    FROM activities a
+    WHERE a.athlete_id = $1
+      AND a.type = 'Run'
+      AND a.start_date >= NOW() - interval '1 year'
+    GROUP BY DATE(a.start_date)
+    ORDER BY date;
+    `,
+    [athleteId],
+  );
+
+  return rows;
+};

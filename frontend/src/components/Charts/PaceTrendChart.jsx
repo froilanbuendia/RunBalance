@@ -85,12 +85,10 @@ const PaceTrendChart = ({ paceData }) => {
   const options = useMemo(() => {
     return {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        title: {
-          display: true,
-          text: "Weekly Pace Trend",
-        },
+
         tooltip: {
           callbacks: {
             label: (context) => {
@@ -108,13 +106,7 @@ const PaceTrendChart = ({ paceData }) => {
           },
           title: {
             display: true,
-            text: "Pace (min/mile)",
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: "Week",
+            text: "Pace Per Mile",
           },
         },
       },

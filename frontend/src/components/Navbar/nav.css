@@ -1,25 +1,31 @@
+.nav-wrapper {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--bg-light);
+  z-index: 10;
+  box-shadow: 0 0 0.25rem var(--border-muted);
+}
 .nav-container {
+  max-width: 1440px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 4rem;
   font-size: 1.5rem;
   color: var(--primary);
-  border: 0.0125rem solid var(--border-muted);
-  position: fixed;
-  max-width: 1440px;
-  width: 100%;
-  background-color: var(--bg-light);
-  z-index: 1;
-  border-top: none;
 }
 
 .nav-profile-brand-container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
+.hero-brand {
+  margin-left: 1rem;
+}
 .nav-profile-container {
   display: flex;
   align-items: center;
@@ -29,7 +35,7 @@
 
 .profile-img {
   border-radius: 50%;
-  padding-inline: 0.5rem;
+  margin-left: 0.5rem;
   height: 2.5rem;
 }
 
@@ -40,6 +46,7 @@
   padding-inline: 0.5rem;
   color: var(--text);
   cursor: pointer;
+  position: relative;
 }
 
 .profile-dropdown,
@@ -52,8 +59,10 @@
   border-top: none;
   z-index: 10;
 }
+
 .tab-dropdown {
-  right: 0;
+  top: 100%; /* directly below the button */
+  right: 0; /* aligns the right edge with button */
 }
 
 .profile-btn,

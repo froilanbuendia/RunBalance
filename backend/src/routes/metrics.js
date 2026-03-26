@@ -8,6 +8,7 @@ const {
   paceTrend,
   paceAvg,
   mileage,
+  heatmap,
 } = require("../controllers/metricsController");
 const authMiddleware = require("../middleware/auth");
 
@@ -18,5 +19,6 @@ router.get("/pace-trend", authMiddleware, paceTrend);
 router.get("/pace-avg", authMiddleware, paceAvg);
 router.get("/injury", authMiddleware, injury);
 router.get("/overview", authMiddleware, overview);
+router.get("/heatmap", authMiddleware, heatmap);
 
 module.exports = router;

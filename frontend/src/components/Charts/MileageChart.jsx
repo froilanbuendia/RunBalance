@@ -25,12 +25,9 @@ const MileageChart = ({ weeklyMileage }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
-      title: {
-        display: true,
-        text: "Weekly Mileage",
-      },
     },
     scales: {
       y: {
