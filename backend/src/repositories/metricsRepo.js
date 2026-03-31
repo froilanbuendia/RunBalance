@@ -123,22 +123,17 @@ exports.getAveragePaceByMiles = async (athleteId) => {
   const { rows } = await pool.query(
     `
       SELECT
-        ROUND(a.distance/1609.34) AS miles,
-        TO_CHAR(
-          MAKE_INTERVAL(secs => AVG(a.moving_time / (a.distance/1609.34))),
-          'MI:SS'
-        ) AS avg_pace
-      FROM activities a
-      WHERE a.athlete_id = $1
-        AND a.type = 'Run'
-        AND a.distance >= 1609.34 -- only 1 mile or longer
-      GROUP BY miles
-      ORDER BY miles;
+        AVG(moving_time / (distance / 1609.34))::int AS "paceAvg"
+      FROM activities
+      WHERE athlete_id = $1
+        AND type = 'Run'
+        AND distance >= 1609.34
+        AND start_date >= NOW() - INTERVAL '7 days'
       `,
     [athleteId],
   );
 
-  return rows;
+  return rows[0];
 };
 
 /**

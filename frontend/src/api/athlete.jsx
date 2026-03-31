@@ -31,6 +31,21 @@ export const fetchPaceAvg = () => {
   return apiFetch(`/api/metrics/pace-avg`);
 };
 
+export const fetchRunStats = () => apiFetch("/api/activities/stats");
+
+export const fetchPersonalRecords = () => apiFetch("/api/activities/personal-records");
+
+export const fetchStreak = () => apiFetch("/api/activities/streak");
+
+export const fetchRunTypeBreakdown = () => apiFetch("/api/activities/run-type-breakdown");
+
+export const fetchHistory = (params = {}) => {
+  const qs = new URLSearchParams(
+    Object.fromEntries(Object.entries(params).filter(([, v]) => v != null))
+  ).toString();
+  return apiFetch(`/api/activities/history${qs ? `?${qs}` : ""}`);
+};
+
 export const syncActivities = () => {
   return apiFetch(`/api/activities/sync`, {
     method: "POST",
