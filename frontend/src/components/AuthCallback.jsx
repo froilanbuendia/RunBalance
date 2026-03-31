@@ -1,24 +1,26 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
-  const hasRedirected = useRef(false); // track if redirect already happened
+  const { login } = useAuth();
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
-    if (hasRedirected.current) return; // skip if already ran
-    hasRedirected.current = true; // mark as ran
+    if (hasRedirected.current) return;
+    hasRedirected.current = true;
 
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
     if (token) {
-      localStorage.setItem("jwt", token); // save token
-      navigate("/dashboard"); // go to protected page
+      login(token); // update React state + localStorage
+      navigate("/dashboard");
     } else {
-      navigate("/"); // fallback to home
+      navigate("/");
     }
-  }, [navigate]);
+  }, [navigate, login]);
 
   return <div>Logging in...</div>;
 };

@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
     const athleteId = payload.athleteId;
 
     const { rows } = await pool.query(
-      "SELECT id, access_token FROM athletes WHERE id = $1",
+      "SELECT id FROM athletes WHERE id = $1",
       [athleteId],
     );
 

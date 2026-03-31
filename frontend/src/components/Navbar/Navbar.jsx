@@ -38,6 +38,8 @@ const Navbar = () => {
     setSyncing(false);
   };
 
+  if (!user) return null;
+
   return (
     <nav className="nav-wrapper">
       <div className="nav-container">
