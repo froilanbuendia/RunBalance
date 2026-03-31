@@ -14,8 +14,7 @@ export const apiFetch = async (endpoint, options = {}) => {
 
   if (!res.ok) {
     if (res.status === 401) {
-      // optional: auto logout logic here
-      localStorage.removeItem("jwt");
+      window.dispatchEvent(new Event("auth:logout"));
     }
 
     throw new Error(`API error: ${res.status}`);

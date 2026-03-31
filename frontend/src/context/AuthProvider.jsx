@@ -19,6 +19,12 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Listen for 401s fired by apiFetch and log out immediately
+  useEffect(() => {
+    window.addEventListener("auth:logout", logout);
+    return () => window.removeEventListener("auth:logout", logout);
+  }, []);
+
   // Load user when token changes
   useEffect(() => {
     if (!token) return;

@@ -64,7 +64,7 @@ exports.handleCallback = async (req, res) => {
 
     // Generate JWT for frontend
     const token = jwt.sign(
-      { athleteId: athlete.id, stravaId: athlete.id },
+      { athleteId: athlete.id },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );

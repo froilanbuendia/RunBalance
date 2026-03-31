@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import Navbar from "./components/Navbar/Navbar";
 import History from "./pages/History";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import { SyncProvider } from "./context/SyncProvider";
 
 const App = () => {
@@ -16,6 +18,8 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route
               path="/dashboard"
