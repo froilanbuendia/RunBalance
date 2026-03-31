@@ -1,6 +1,5 @@
 import "./card.css";
 const Chart = ({ name, chart, handleRange, range, heatmap, handleHeatMap }) => {
-  console.log(chart);
   return (
     <div className="card">
       <div className="chart-title">
@@ -71,7 +70,13 @@ const Chart = ({ name, chart, handleRange, range, heatmap, handleHeatMap }) => {
         )}
       </div>
       <hr></hr>
-      <div className={heatmap ? `chart-heatmap` : `chart`}>{chart}</div>
+      {heatmap ? (
+        <div className="chart-heatmap-wrapper">
+          <div className="chart-heatmap">{chart}</div>
+        </div>
+      ) : (
+        <div className="chart">{chart}</div>
+      )}
     </div>
   );
 };

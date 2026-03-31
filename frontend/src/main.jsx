@@ -11,6 +11,8 @@ import {
   LineElement,
   PointElement,
   LineController,
+  DoughnutController,
+  ArcElement,
   Tooltip,
   Legend,
   Title,
@@ -19,11 +21,13 @@ import {
 
 ChartJS.register(
   LineController,
+  DoughnutController,
   CategoryScale,
   LinearScale,
   BarElement,
   LineElement,
   PointElement,
+  ArcElement,
   Tooltip,
   Legend,
   Title,

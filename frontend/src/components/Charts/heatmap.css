@@ -1,27 +1,134 @@
-.react-calendar-heatmap .react-calendar-heatmap-month-label {
-  font-size: 0.5rem; /* increase size */
-  fill: var(--text); /* text color */
-  max-width: 800px;
-}
-
-/* Ensure the calendar itself fills the container width */
+/* ── Calendar SVG ─────────────────────────────────────────────── */
 .react-calendar-heatmap {
   width: 100% !important;
   height: 100% !important;
 }
 
+.react-calendar-heatmap .react-calendar-heatmap-month-label {
+  font-size: clamp(0.625rem, 2vw, 0.75rem);
+  fill: var(--text-muted);
+}
+
+.react-calendar-heatmap .react-calendar-heatmap-weekday-label {
+  font-size: clamp(0.5rem, 2vw, 0.625rem);
+  fill: var(--text-muted);
+}
+
+/* ── Base empty cell ──────────────────────────────────────────── */
 .color-empty {
-  fill: var(--color-empty);
+  fill: var(--bg-dark);
 }
-.color-scale-1 {
-  fill: var(--color-1);
+
+/* ── Distance scale (green) ───────────────────────────────────── */
+.heatmap-distance .color-scale-1 {
+  fill: oklch(88% 0.08 150);
 }
-.color-scale-2 {
-  fill: var(--color-2);
+.heatmap-distance .color-scale-2 {
+  fill: oklch(72% 0.14 150);
 }
-.color-scale-3 {
-  fill: var(--color-3);
+.heatmap-distance .color-scale-3 {
+  fill: oklch(56% 0.16 150);
 }
-.color-scale-4 {
-  fill: var(--color-4);
+.heatmap-distance .color-scale-4 {
+  fill: oklch(40% 0.14 150);
+}
+
+/* ── Effort scale (orange → red) ──────────────────────────────── */
+.heatmap-effort .color-scale-1 {
+  fill: oklch(90% 0.08 60);
+}
+.heatmap-effort .color-scale-2 {
+  fill: oklch(75% 0.15 50);
+}
+.heatmap-effort .color-scale-3 {
+  fill: oklch(60% 0.18 40);
+}
+.heatmap-effort .color-scale-4 {
+  fill: oklch(44% 0.16 30);
+}
+
+/* ── Elevation scale (blue) ───────────────────────────────────── */
+.heatmap-elevation .color-scale-1 {
+  fill: oklch(88% 0.06 260);
+}
+.heatmap-elevation .color-scale-2 {
+  fill: oklch(72% 0.12 260);
+}
+.heatmap-elevation .color-scale-3 {
+  fill: oklch(56% 0.14 260);
+}
+.heatmap-elevation .color-scale-4 {
+  fill: oklch(40% 0.14 260);
+}
+
+/* ── Legend ───────────────────────────────────────────────────── */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.heatmap-legend-label {
+  font-size: clamp(0.625rem, 2vw, 0.75rem);
+  color: var(--text-muted);
+}
+
+.legend-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-swatch.scale-empty {
+  background: var(--bg-dark);
+}
+
+/* Distance swatches */
+[data-metric="distance"] .legend-swatch.scale-1 {
+  background: oklch(88% 0.08 150);
+}
+[data-metric="distance"] .legend-swatch.scale-2 {
+  background: oklch(72% 0.14 150);
+}
+[data-metric="distance"] .legend-swatch.scale-3 {
+  background: oklch(56% 0.16 150);
+}
+[data-metric="distance"] .legend-swatch.scale-4 {
+  background: oklch(40% 0.14 150);
+}
+
+/* Effort swatches */
+[data-metric="effort"] .legend-swatch.scale-1 {
+  background: oklch(90% 0.08 60);
+}
+[data-metric="effort"] .legend-swatch.scale-2 {
+  background: oklch(75% 0.15 50);
+}
+[data-metric="effort"] .legend-swatch.scale-3 {
+  background: oklch(60% 0.18 40);
+}
+[data-metric="effort"] .legend-swatch.scale-4 {
+  background: oklch(44% 0.16 30);
+}
+
+/* Elevation swatches */
+[data-metric="elevation"] .legend-swatch.scale-1 {
+  background: oklch(88% 0.06 260);
+}
+[data-metric="elevation"] .legend-swatch.scale-2 {
+  background: oklch(72% 0.12 260);
+}
+[data-metric="elevation"] .legend-swatch.scale-3 {
+  background: oklch(56% 0.14 260);
+}
+[data-metric="elevation"] .legend-swatch.scale-4 {
+  background: oklch(40% 0.14 260);
+}
+
+/* ── Cell hover ───────────────────────────────────────────────── */
+.react-calendar-heatmap rect:hover {
+  opacity: 0.75;
+  cursor: pointer;
 }
