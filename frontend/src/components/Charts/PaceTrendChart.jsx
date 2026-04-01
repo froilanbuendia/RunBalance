@@ -22,10 +22,14 @@ const PaceTrendChart = ({ paceData }) => {
   const weekTimestamps = useMemo(() => {
     if (sortedData.length === 0) return [];
     const weeks = [];
-    const start = new Date(sortedData[0].week);
-    const end = new Date(sortedData[sortedData.length - 1].week);
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 7)) {
-      weeks.push(d.getTime());
+    const toUTCMidnight = (date) => {
+      const d = new Date(date);
+      return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    };
+    const start = toUTCMidnight(sortedData[0].week);
+    const end = toUTCMidnight(sortedData[sortedData.length - 1].week);
+    for (let ts = start; ts <= end; ts += 7 * 24 * 60 * 60 * 1000) {
+      weeks.push(ts);
     }
     return weeks;
   }, [sortedData]);
@@ -33,9 +37,11 @@ const PaceTrendChart = ({ paceData }) => {
   const paceSeconds = useMemo(
     () =>
       weekTimestamps.map((ts) => {
-        const entry = sortedData.find(
-          (w) => new Date(w.week).getTime() === ts,
-        );
+        const entry = sortedData.find((w) => {
+          const d = new Date(w.week);
+          const normalized = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+          return normalized === ts;
+        });
         return entry ? entry.pace : null;
       }),
     [weekTimestamps, sortedData],
