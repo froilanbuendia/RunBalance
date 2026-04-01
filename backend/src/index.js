@@ -9,6 +9,7 @@ const athleteRoutes = require("./routes/athlete");
 const activitiesRoutes = require("./routes/activities");
 const healthCheckRoutes = require("./routes/healthcheck");
 const metricsRoutes = require("./routes/metrics");
+const chatRoutes = require("./routes/chat");
 
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -20,6 +21,7 @@ app.use("/api/hc", healthCheckRoutes);
 app.use("/api/athlete", athleteRoutes);
 app.use("/api/activities", activitiesRoutes);
 app.use("/api/metrics", metricsRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.get("/api/health/db", async (req, res) => {
   try {

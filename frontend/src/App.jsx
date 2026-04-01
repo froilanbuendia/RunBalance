@@ -3,6 +3,7 @@ import Home from "./components/Home";
 import Dashboard from "./pages/Dashboard";
 import AuthCallback from "./components/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import Layout from "./components/Layout";
 import Navbar from "./components/Navbar/Navbar";
 import History from "./pages/History";
@@ -17,7 +18,7 @@ const App = () => {
         <Layout>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/auth/callback" element={<AuthCallback />} />

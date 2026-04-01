@@ -91,7 +91,7 @@ const KpiStrip = ({ prs }) => {
 };
 
 const Dashboard = () => {
-  const { data, loading } = useDashboardData();
+  const { data, loading, refresh } = useDashboardData();
   const [mileageRange, setMileageRange] = useState("1m");
   const [paceRange, setPaceRange] = useState("1m");
   const [heatmap, setHeatMap] = useState("distance");
@@ -125,6 +125,8 @@ const Dashboard = () => {
               completed={data.weeklyGoal.completed_distance}
               paceAvg={data.paceAvg}
               streak={data.streak}
+              chronicMiles={data.acwr?.chronicMiles}
+              onGoalUpdate={refresh}
             />
           </MotionDiv>
           <MotionDiv whileHover={cardHover} className="dashboard-injury">

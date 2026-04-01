@@ -181,6 +181,60 @@
   color: var(--text-muted);
 }
 
+.goal-label-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 2px;
+}
+
+.goal-label-btn:hover {
+  color: var(--text);
+}
+
+.goal-label-warning {
+  color: var(--warning);
+}
+
+.goal-edit-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.goal-input {
+  width: 3.5rem;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid var(--success);
+  border-radius: 0.25rem;
+  background: var(--bg);
+  color: var(--text);
+  text-align: right;
+}
+
+.goal-input:focus {
+  outline: none;
+}
+
+.goal-input-unit {
+  color: var(--text-muted);
+}
+
+.goal-suggested {
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+  color: var(--text-muted);
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+}
+
 .metric-card-stats {
   display: flex;
   align-items: center;

@@ -1,4 +1,4 @@
-const { getRollingAcwr } = require("../repositories/metricsRepo");
+const { getRollingAcwr, getRollingWeeklyGoal, upsertWeeklyGoal } = require("../repositories/metricsRepo");
 const { computeInjuryRisk } = require("../services/injuryRiskService");
 const {
   getPerformanceMetrics,
@@ -98,6 +98,21 @@ exports.injury = async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).send("Failed to calculate injury risk");
+  }
+};
+
+exports.setGoal = async (req, res) => {
+  try {
+    const athleteId = req.user.id;
+    const { target } = req.body;
+    if (!target || isNaN(target) || target <= 0) {
+      return res.status(400).json({ error: "Invalid target" });
+    }
+    const goal = await upsertWeeklyGoal(athleteId, Number(target));
+    res.json(goal);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Failed to set goal" });
   }
 };
 

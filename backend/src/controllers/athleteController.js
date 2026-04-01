@@ -19,8 +19,6 @@ exports.getZones = async (req, res) => {
   try {
     const athleteId = req.athlete.athleteId;
     const stravaApi = await createStravaApi(athleteId);
-    console.log("athleteId", athleteId);
-
     const data = await stravaApi.get("/athlete/zones");
     res.json(data);
   } catch (err) {

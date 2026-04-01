@@ -1,17 +1,31 @@
 const { pool } = require("../database/db");
 
-// weeklyGoals.js
+exports.upsertWeeklyGoal = async (athleteId, targetMiles) => {
+  const { rows } = await pool.query(
+    `INSERT INTO weekly_goals (athlete_id, week_start, target_distance)
+     VALUES ($1, date_trunc('week', CURRENT_DATE), $2)
+     ON CONFLICT (athlete_id, week_start)
+     DO UPDATE SET target_distance = EXCLUDED.target_distance
+     RETURNING *`,
+    [athleteId, targetMiles],
+  );
+  return rows[0];
+};
+
 exports.getRollingWeeklyGoal = async (athleteId) => {
   const res = await pool.query(
-    `SELECT 
+    `SELECT
         g.target_distance,
+        g.week_start,
         COALESCE(SUM(a.distance / 1609.34), 0) AS completed_distance
      FROM weekly_goals g
      LEFT JOIN activities a
         ON a.athlete_id = g.athlete_id
         AND a.start_date >= NOW() - INTERVAL '7 days'
      WHERE g.athlete_id = $1
-     GROUP BY g.target_distance`,
+     GROUP BY g.target_distance, g.week_start
+     ORDER BY g.week_start DESC
+     LIMIT 1`,
     [athleteId],
   );
 
