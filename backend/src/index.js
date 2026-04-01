@@ -7,7 +7,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const athleteRoutes = require("./routes/athlete");
 const activitiesRoutes = require("./routes/activities");
-const healthCheckRoutes = require("./routes/healthcheck");
+const healthCheckRoutes = require("./routes/healthCheck");
 const metricsRoutes = require("./routes/metrics");
 const chatRoutes = require("./routes/chat");
 
