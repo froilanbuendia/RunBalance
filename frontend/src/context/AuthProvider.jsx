@@ -12,8 +12,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("logging out");
-
     localStorage.removeItem("jwt");
     setToken(null);
     setUser(null);

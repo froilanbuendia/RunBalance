@@ -19,13 +19,6 @@ exports.redirectToStrava = (req, res) => {
     approval_prompt: "auto",
   });
 
-  console.log(
-    "url check:",
-    stravaConfig.authUrl,
-    params,
-    process.env.FRONTEND_URL
-  );
-
   res.redirect(`${stravaConfig.authUrl}?${params.toString()}`);
 };
 

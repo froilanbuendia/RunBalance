@@ -52,3 +52,17 @@ export const syncActivities = () => {
     body: JSON.stringify({}),
   });
 };
+
+export const updateGoal = (target) =>
+  apiFetch("/api/metrics/goal", {
+    method: "POST",
+    body: JSON.stringify({ target }),
+  });
+
+export const fetchChatHistory = () => apiFetch("/api/chat/history");
+
+export const sendChatMessage = (message) =>
+  apiFetch("/api/chat", {
+    method: "POST",
+    body: JSON.stringify({ message }),
+  });

@@ -7,7 +7,9 @@ import { Link, useLocation } from "react-router-dom";
 import { syncActivities } from "../../api/athlete";
 import useAuth from "../../hooks/useAuth";
 import { useSync } from "../../context/SyncContext";
+import ChatDrawer from "../Chat/ChatDrawer";
 import "./nav.css";
+import "../Chat/chat.css";
 
 const MotionDiv = motion.div;
 
@@ -15,6 +17,7 @@ const Navbar = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuth();
   const { triggerSync } = useSync();
@@ -41,6 +44,7 @@ const Navbar = () => {
   if (!user) return null;
 
   return (
+    <>
     <nav className="nav-wrapper">
       <div className="nav-container">
         {/* Brand */}
@@ -169,6 +173,20 @@ const Navbar = () => {
         )}
       </AnimatePresence>
     </nav>
+
+      {/* Floating coach button */}
+      <button
+        className="chat-fab"
+        onClick={() => setChatOpen(true)}
+        aria-label="Open coach"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7H3a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A1.5 1.5 0 0 0 6 14.5 1.5 1.5 0 0 0 7.5 16 1.5 1.5 0 0 0 9 14.5 1.5 1.5 0 0 0 7.5 13m9 0A1.5 1.5 0 0 0 15 14.5 1.5 1.5 0 0 0 16.5 16 1.5 1.5 0 0 0 18 14.5 1.5 1.5 0 0 0 16.5 13M5 18v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1H5z" />
+        </svg>
+      </button>
+
+      <ChatDrawer open={chatOpen} onClose={() => setChatOpen(false)} />
+    </>
   );
 };
 

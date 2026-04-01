@@ -5,8 +5,10 @@ import { useSync } from "../context/SyncContext";
 const useDashboardData = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const { syncVersion } = useSync();
+  const refresh = () => setRefreshKey((k) => k + 1);
 
   useEffect(() => {
     const load = async () => {
@@ -34,9 +36,9 @@ const useDashboardData = () => {
     };
 
     load();
-  }, [syncVersion]);
+  }, [syncVersion, refreshKey]);
 
-  return { data, loading };
+  return { data, loading, refresh };
 };
 
 export default useDashboardData;
